@@ -18,11 +18,10 @@ public class TreePrinter {
         if (root == null) {//还是首先想特殊case，比较不容易忘记
             return null;
         }
-        //int[][] result = new int[9][50];不能这样设数组
         TreeNode last = root;
         TreeNode nlast = root;
         Queue<TreeNode> queue = new LinkedList<TreeNode>();
-        List<List<Integer>> lists = new LinkedList<List<Integer>>();
+        List<List<Integer>> lists = new LinkedList<List<Integer>>();//注意二维声明的方式，时间太长，都忘记了
         List<Integer> list = new LinkedList<Integer>();
         queue.add(root);
         while (queue.isEmpty() != true) {
@@ -36,7 +35,7 @@ public class TreePrinter {
                 queue.add(temp.right);
                 nlast = temp.right;
             }
-            if (temp == last) {
+            if (temp == last) {//当打印到last元素时，表示这一层的已经打完了，然后让last等于nlast，开始打印下一层
                 lists.add(list);
                 list = new LinkedList<Integer>();
                 last = nlast;
@@ -44,6 +43,7 @@ public class TreePrinter {
         }
         
         int n = lists.size();
+        //要求返回的是数组，但是数组必须要知道长度。而这是我们不知道得。所以将结果放在list中，然后将数据从list中移到数组中。
         int[][] result = new int[n][];
         for (int i=0; i<n; i++) {
             int m = lists.get(i).size();
