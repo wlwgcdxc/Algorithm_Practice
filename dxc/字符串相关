@@ -131,4 +131,147 @@ public class Transform {
     }
 }
 
+3.5 两串旋转练习题
+如果对于一个字符串A，将A的前面任意一部分挪到后边去形成的字符串称为A的旋转词。比如A="12345",A的旋转词有"12345","23451","34512","45123"和"51234"。对于两个字符串A和B，请判断A和B是否互为旋转词。
+给定两个字符串A和B及他们的长度lena，lenb，请返回一个bool值，代表他们是否互为旋转词。
 测试样例：
+"cdab",4,"abcd",4
+返回：true
+
+import java.util.*;
+
+public class Rotation {
+	
+	public static void main(String[] args) {
+		String up = new String("babcbabcabcaabcabcabcacabc");
+		String B = new String("abcabcacab");
+		
+		System.out.println(isChildStr(up, B));
+		
+	}
+	
+    public static boolean chkRotation(String A, int lena, String B, int lenb) {
+        // write code here
+    	if (A == null || B == null || lena != lenb) {
+    		return false;
+    	}
+    	String up = A + A;
+    	return isChildStr(up, B);
+    }
+    
+    public static boolean isChildStr(String up, String down) {//KMP
+    	int[] next = getNext(down);
+    	int i = 0;
+    	int j = 0;
+    	while (j < down.length()) {
+    		if (i >= up.length()) {
+    			return false;
+    		}
+    		if (up.charAt(i) == down.charAt(j)) {
+        		i++;
+        		j++;
+        		continue;
+        	} else { 
+        		if (next[j] == 0) {
+        			j = 0;
+        			i++;
+        			continue;
+        		} else {
+        			j = next[j] - 1;
+        		}
+        		
+        	}
+    	}
+    	return true;
+    }
+    
+    public static int[] getNext(String str) {
+    	int[] next = new int[str.length()];
+    	if (str.length() == 1) {
+    		next[0] = 0;
+    	} else {
+    		next[0] = 0;
+    		next[1] = 1;
+    		for (int i=2; i<str.length(); i++) {
+    			int k = i - 1;
+    			while (k >= 1) {
+    				for (int m=0; m<k; m++) {
+            			if (str.charAt(m) == str.charAt(i-k+m)) {
+            				if (m == k-1) {
+            					next[i] = k + 1;
+            					break;
+            				}
+                			continue;
+                		} else {
+                			k--;
+                			break;
+                		}
+            		}
+            		if (next[i] != 0) {
+            			break;
+            		}
+    			}
+    			if (next[i] == 0) {
+        			next[i] = 1;
+        		}
+    		}
+    	}
+    	return next;
+    }
+}
+
+3.6 句子的逆序练习题
+对于一个字符串，请设计一个算法，只在字符串的单词间做逆序调整，也就是说，字符串由一些由空格分隔的部分组成，你需要将这些部分逆序。
+给定一个原字符串A和他的长度，请返回逆序后的字符串。
+测试样例：
+"dog loves pig",13
+返回："pig loves dog"
+
+//对格式要求还是不是很严格，机试的时候，先别想很边缘的特殊case，简单的判断下边界就可以了。要是不通过，再做更精细的控制
+import java.util.*;
+
+public class Reverse {
+	public String reverseSentence(String A, int n) {
+       // write code here
+		if (A.length() != n || A == null || n <=0) {
+			return "ERROR";
+		}
+		StringBuffer result = new StringBuffer(A);
+		convertStr(result, 0, n-1);//先把整体的字符串反转下
+		int[] blank = findBlank(result);//存储空格对应的下标
+		int i = 0;
+		int k;
+		for(k=0; blank[k] != -1; k++) {
+			convertStr(result, i, blank[k]-1);
+			i = blank[k] + 1;
+		}
+		convertStr(result, blank[k-1]+1, n-1);
+		return result.toString();		
+    }
+	
+	public static StringBuffer convertStr(StringBuffer str, int begin, int end) {//end包括最后的字符
+		if (begin == end) {
+			return str;
+		}
+		int k = (end - begin) / 2;
+		for(int i=0; i<=k; i++) {
+			char tmp = str.charAt(begin+i);
+			str.setCharAt(begin+i, str.charAt(end-i));
+			str.setCharAt(end-i, tmp);
+		}
+		return str;
+	}
+	
+	public static int[] findBlank(StringBuffer str) {
+		int[] blank = new int[str.length()];
+		int k = 0;
+		for (int i=0; i<str.length(); i++) {
+			if (str.charAt(i) == ' ') {
+				blank[k++] = i;
+			}
+		}
+		blank[k] = -1;
+		return blank;
+	}
+}
+
