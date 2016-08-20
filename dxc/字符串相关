@@ -1,0 +1,102 @@
+3.2 拓扑结构相同子树练习题
+
+对于两棵彼此独立的二叉树A和B，请编写一个高效算法，检查A中是否存在一棵子树与B树的拓扑结构完全相同。
+给定两棵二叉树的头结点A和B，请返回一个bool值，代表A中是否存在一棵同构于B的子树。
+
+思路：先得到两颗树的中序遍历序列，再使用KMP算法进行字符串的匹配
+
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+public class IdenticalTree {
+    public boolean chkIdentical(TreeNode A, TreeNode B) {
+        // write code here
+        if (A == null || B == null) {
+    		return false;
+    	}
+    	
+    	String up = getMiddleSeri(A);
+    	String down = getMiddleSeri(B);
+    	return isChildStr(up, down);
+    }
+    
+      public boolean isChildStr(String up, String down) { //KMP
+    	if (up.length() == 0 || down.length() == 0) {
+    		return false;
+    	}
+    	int[] next = getNext(down);
+    	int i = 0;
+    	int j = 0;
+    	while (j < down.length()) {
+    		if (i >= up.length()) {
+    			return false;
+    		}
+    		if (up.charAt(i) == down.charAt(j)) {
+        		i++;
+        		j++;
+        		continue;
+        	} else {
+        		if (next[j] == 0) {
+        			i++;
+        			j = 0;
+        			continue;
+        		} else {
+        			j = next[j] - 1;
+        		}
+        	}
+    	}
+    	return true;
+    } 
+    
+    public static int[] getNext(String str) {
+    	int[] next = new int[str.length()];
+    	if (str.length() == 1) {
+    		next[0] = 0;
+    	} else{
+    		next[0] = 0;
+    		next[1] = 1;
+    		for (int i=2; i<str.length(); i++) {
+    			int k = i - 1;//算最大的前缀k
+        		while (k >= 1) {
+        			for (int m=0; m<k; m++) {
+        				if (str.charAt(m) == str.charAt(i-k+m)) {
+        					if (m == k - 1) {//遍历完都相等，说明已经找到了
+        	    				next[i] = k + 1;
+        					} else {
+            					continue;//否则继续，遍历
+        					}
+        				} else {//要是遍历中断，找更小的K值
+        					break;
+        				}
+        			}
+        			if (next[i] != 0) {//next[i]不为0了，说明已经找到了K值了，直接break
+        				break;
+        			}
+        			k--;
+        		}
+        		if (next[i] == 0) {//没找到对应k值得，直接换成1
+        			next[i] = 1;
+        		}	
+    		}
+    	}
+    	return next;
+    }
+    
+    public String getMiddleSeri(TreeNode A) {
+    	if (A == null) {
+    		return "#!";
+    	}
+    	String root = A.val + "!";
+    	String left = getMiddleSeri(A.left);
+    	String right = getMiddleSeri(A.right);
+    	return root + left + right;
+    }
+  }
