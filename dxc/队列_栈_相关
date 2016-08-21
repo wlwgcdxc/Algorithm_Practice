@@ -1,0 +1,47 @@
+4.2 可查询最值的栈练习题
+定义栈的数据结构，请在该类型中实现一个能够得到栈最小元素的min函数。
+import java.util.Stack;
+
+public class Solution {
+    
+    private Stack<Integer> dataStack = new Stack<Integer>();//通常意义上的栈，泛型需要是个引用（错误1）
+    private Stack<Integer> minStack = new Stack<Integer>();//存放datastack上对应位置的最小值
+    
+    public void push(int node) {
+    	if (dataStack.empty()) {           
+            minStack.push(node);
+        } else {
+            if (node < minStack.peek()) {
+                minStack.push(node);
+            } else {
+                minStack.push(minStack.peek());
+            }
+        }
+        dataStack.push(node);
+    }
+    
+    public void pop() {
+        if(dataStack.empty()) {
+            throw new RuntimeException("Your stack is empty");//这种不正常的情况还是抛出异常比较好（错误二）
+        } else {
+            dataStack.pop();
+            minStack.pop();
+        }
+    }
+    
+    public int top() {
+        if (dataStack.empty()) {
+            throw new RuntimeException("Your stack is empty");
+        } else {
+            return dataStack.peek();//忘记return了（错误三）
+        }
+    }
+    
+    public int min() {
+        if (dataStack.empty()) {
+            throw new RuntimeException("Your stack is empty");
+        } else {
+            return minStack.peek();
+        }
+    }
+}
