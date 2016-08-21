@@ -111,13 +111,13 @@ public class StackReverse {
         }
         int[] result = new int[n];
         int k = 0;
-        while (!stack.empty()) {
+        while (!stack.empty()) {//这里居然写成了if，愚蠢啊
            result[k++] = getEle(stack); 
         } 
         return result;
     }
     
-    public int getEle(Stack<Integer> stack) {
+    public int getEle(Stack<Integer> stack) {//参数也要加上泛型，不然他就找不到类型了（错误1）
     	int tmp = stack.pop();
         if (stack.empty()) {
             return tmp;
