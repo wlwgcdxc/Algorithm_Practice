@@ -127,3 +127,57 @@ public class StackReverse {
         return result;
     }
 }
+
+4.6 双栈排序练习题
+请编写一个程序，按升序对栈进行排序（即最大元素位于栈顶），要求最多只能使用一个额外的栈存放临时数据，但不得将元素复制到别的数据结构中。
+给定一个int[] numbers(C++中为vector<int>)，其中第一个元素为栈顶，请返回排序后的栈。请注意这是一个栈，意味着排序过程中你只能访问到第一个元素。
+测试样例：
+[1,2,3,4,5]
+返回：[5,4,3,2,1]
+
+import java.util.*;
+
+public class TwoStacks {
+    public ArrayList<Integer> twoStacksSort(int[] numbers) {
+        // write code here
+    	if (numbers == null) {
+    		throw new RuntimeException("input is null.");
+    	}
+    	ArrayList<Integer> aList = new ArrayList<Integer>();
+    	if (numbers.length == 1) {
+    		aList.add(numbers[0]);
+    		return aList;
+    	}
+    	
+    	int[] help = new int[numbers.length];
+    	int i = 0;//指向numbers的栈顶元素
+    	int j = numbers.length - 1;//指向help的栈顶元素
+    	int tmp;
+    	
+    	while (j >= 0) {//j始终指向help中下一次要放的位置
+    		tmp = numbers[i++];//i始终指向下一次要取的numbers的栈顶元素
+    		if (i == 1 && j == numbers.length - 1) {
+    			help[j] = tmp;
+    			j--;
+    		} else {
+    			if (tmp >= help[j + 1]) {//把方向搞错了，应该+的方向（错误一）
+    				help[j] = tmp;
+    				j--;
+    			} else {
+    				while (j != numbers.length - 1 && help[j + 1] >  tmp) {//还有判断边界，应该放在最前面（错误二）
+    					numbers[i - 1] = help[j + 1];
+    					i--;
+    					j++;
+    				}
+    				help[j] = tmp;
+    				j--;
+    			}
+    		}
+    	}
+    	
+    	for (int k=0; k<numbers.length; k++) {
+    		aList.add(help[k]);
+    	}
+    	return aList;
+    }
+}
