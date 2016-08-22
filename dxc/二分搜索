@@ -44,6 +44,69 @@ import java.util.*;
 public class LeftMostAppearance {
     public int findPos(int[] arr, int n, int num) {
         // write code here
+        if (arr == null || arr.length != n || n <= 0) {
+            return -1;
+        }
+        if (n == 1) {
+            if (arr[0] == num) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+        return findPos(arr, num, 0, n);
+    }
+    
+    public int findPos(int[] arr, int num, int begin, int end) {//begin包含，end不包含
+        if (begin >= end) {//这种移下标的，一定要把所有的情况都处理了，保不重就出现这种情况了。（错误1）
+    		return -1;
+    	}
+        
+        if (end - begin == 1) {
+            if (arr[begin] == num) {
+                return begin;
+            } else {
+                return -1;
+            }
+        }
+        int prePos = -1;
+        int aftPos = -1;
+        int middle = (end - begin) / 2 + begin;
+        if (arr[begin] > arr[end-1]) {//递减数组
+            if (arr[middle] > num) {
+                return findPos(arr, num, middle+1, end);
+            } else if (arr[middle] < num) {
+                return findPos(arr, num, begin, middle);
+            } else {
+                prePos = middle;
+                aftPos = findPos(arr, num, begin, middle);
+                if (aftPos != -1) {
+                    return aftPos;
+                } else {
+                    return prePos;
+                }
+            }
+        } else if (arr[begin] < arr[end-1]) {//递增数组
+            if (arr[middle] > num) {
+                return findPos(arr, num, begin, middle);
+            } else if(arr[middle] < num) {
+                return findPos(arr, num, middle+1, end);
+            } else {
+                prePos = middle;
+                aftPos = findPos(arr, num, begin, middle);
+                if (aftPos != -1) {
+                    return aftPos;
+                } else {
+                    return prePos;
+                }
+            }
+        } else {
+            if (arr[begin] != num) {
+                return -1;
+            } else {
+                return begin;
+            }
+        }
     }
 }
 
