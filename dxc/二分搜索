@@ -81,10 +81,81 @@ public class CountNodes {
 2,3
 返回：8
 
+心得：
+在算有可能溢出的值得乘积时：先转换成long值，乘，再取模，再转换成int
+bin[i] = (int)(((long)bin[i-1] * (long)bin[i-1]) % 1000000007);
+
+方法1.
 import java.util.*;
 
 public class QuickPower {
-    public int getPower(int k, int N) {
+    public int getPower(int k, int N) {//就是很纯的递归，别用老师讲的先算二进制序列，再算，各种问题
         // write code here
+        if (N < 0 || k == 0) {
+            return -1;
+        }
+        if (N == 0) {
+            return 1;
+        }
+        if (N == 1) {
+            return k;
+        }
+        if (N % 2 == 0) {
+            int tmp = getPower(k, N/2);
+            long temp = (long)tmp;
+            temp = (temp * temp) % 1000000007;
+            return (int)(temp);
+        } else {
+            int tmp = getPower(k, (N-1)/2);
+            long temp = (long)tmp;
+            temp = (temp * temp) % 1000000007;
+            return (int)((temp * k) % 1000000007);
+        }
+    }
+}
+
+方法2：老师讲的先找二进制序列
+import java.util.*;
+
+public class QuickPower {
+    public static int getPower(int k, int N) {
+        // write code here
+        if (N < 0 || k == 0) {
+            return -1;
+        }
+        if (N == 0) {
+            return 1;
+        }
+        if (N == 1) {
+            return k;
+        }
+        String sri = getBinSri(N);//获取N对应的二进制序列
+        int len = sri.length();
+        int[] bin = new int[len];//获取2的n次方
+        bin[0] = k;
+        for (int i=1; i<len; i++) {
+            bin[i] = (int)(((long)bin[i-1] * (long)bin[i-1]) % 1000000007);
+            System.out.println(bin[i]);
+        }
+        int result = 1;
+        for (int i=0; i<len; i++) {
+            if (sri.charAt(i) == '1') {
+                result = (int)(((long)result * (long)bin[len - 1 - i]) % 1000000007);
+            } else {
+                result = result * 1;
+            }
+        }
+        return (int)(result % 1000000007);
+    }
+    
+    public static String getBinSri(int n) {
+        if (n == 1) {
+            return Integer.toString(1);
+        }
+        int x = n / 2;//商
+        String y = Integer.toString(n % 2);//余数
+        String result = getBinSri(x);
+        return result + y;
+        
     }
 }
