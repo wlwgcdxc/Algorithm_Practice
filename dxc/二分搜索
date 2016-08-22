@@ -1,9 +1,34 @@
  6.2 局部最小值位置练习题
  定义局部最小的概念。arr长度为1时，arr[0]是局部最小。arr的长度为N(N>1)时，如果arr[0]<arr[1]，那么arr[0]是局部最小；如果arr[N-1]<arr[N-2]，那么arr[N-1]是局部最小；如果0<i<N-1，既有arr[i]<arr[i-1]又有arr[i]<arr[i+1]，那么arr[i]是局部最小。 给定无序数组arr，已知arr中任意两个相邻的数都不相等，写一个函数，只需返回arr中任意一个局部最小出现的位置即可。
  
- public class Solution {
+ import java.util.*;
+    
+public class Solution {
     public int getLessIndex(int[] arr) {
-
+        if (arr == null || arr.length == 0) {
+            return -1;//要考虑下，应该返回什么，我当时抛出了个异常
+        }
+		      return getLessIndex(arr, 0, arr.length);
+    }
+    
+    public int getLessIndex(int[] arr, int begin, int end) {//begin包含，end不包含
+        if (end - begin == 1) {
+            return begin;//还有注意是找位置，还是对应的值
+        }
+        if (arr[begin] < arr[begin+1]) {
+            return begin;
+        }
+        if (arr[end-1] < arr[end-2]) {
+            return end-1;
+        }
+        int middle = (end - begin) / 2;//走到这里n至少是3
+        if (arr[middle] < arr[middle-1] && arr[middle] < arr[middle+1]){
+            return middle;
+        } else if (arr[middle] > arr[middle-1] && arr[middle] < arr[middle+1]) {
+            return getLessIndex(arr, begin+1, middle);
+        } else {
+            return getLessIndex(arr, middle+1, end-1);
+        }
     }
 }
 
