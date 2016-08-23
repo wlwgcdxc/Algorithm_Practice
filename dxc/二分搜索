@@ -122,6 +122,46 @@ import java.util.*;
 public class MinValue {
     public int getMin(int[] arr, int n) {
         // write code here
+        if (arr.length != n || n <= 0) {
+            return -1;
+        }
+        if (n == 1) {
+            return arr[0];
+        }
+        if (arr[0] < arr[n-1]) {//是最原本的顺序
+            return arr[0];
+        }
+        return getMin(arr, 0, n);
+    }
+    
+    public int getMin(int[] arr, int begin, int end) {
+        if (begin >= end) {//这个出口奇怪
+            return -1;
+        }
+        if (end - begin == 1) {
+            return arr[begin];
+        }
+        if (end - begin == 2) {//否则会出现死循环
+            if (arr[begin] > arr[end-1]) {
+                return arr[end-1];
+            } else {
+                return arr[begin];
+            }
+        }
+        int mid = (end - begin) / 2 + begin;
+        if (arr[mid] < arr[begin]) {//在左边
+            return getMin(arr, begin, mid+1);//这里这样写，本来有可能一直陷进去，所以要特殊处理下
+        } else if (arr[mid] > arr[end-1]) {//在右边
+            return getMin(arr, mid+1, end);
+        } else {
+            int min = Integer.MAX_VALUE;
+            for(int i=begin; i< end; i++) {
+                if (min > arr[i]) {
+                    min = arr[i];
+                }
+            }
+            return min;
+        }
     }
 }
 
