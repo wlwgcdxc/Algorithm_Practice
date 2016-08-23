@@ -137,6 +137,60 @@ import java.util.*;
 public class Find {
     public int findPos(int[] arr, int n) {
         // write code here
+        if (arr == null || arr.length != n || n<= 0) {
+            return -1;
+        }
+        if (n == 1) {
+            if (arr[0] == 0) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+        return findPos(arr, 0, n);
+    }
+    
+    public int findPos(int[] arr, int begin, int end) {//begin包括，end不包括
+        if (begin >= end) {
+            return -1;
+        }
+        if (end - begin == 1) {
+            if (arr[begin] == begin) {
+                return begin;
+            } else {
+                return -1;
+            }
+        }
+        int middle = (end - begin) / 2 + begin;
+        int prePos = -1;
+        if (arr[begin] < arr[end-1]) {//递增数组
+            if (arr[end-1] <= 0) {
+                return -1;
+            }
+            if (arr[middle] < middle) {
+                return findPos(arr, middle+1, end);
+            } else if (arr[middle] > middle) {
+                return findPos(arr, begin, middle);
+            } else {
+                prePos = findPos(arr, begin, middle);
+                if (prePos == -1) {
+                    return middle;
+                } else {
+                    return prePos;
+                }
+            }
+        } else {//递减数组
+            if (arr[0] < 0) {
+                return -1;
+            }
+            if (arr[middle] < middle) {
+                return findPos(arr, begin, middle);
+            } else if (arr[middle] > middle) {
+                return findPos(arr, middle+1, end);
+            } else {
+                return middle;
+            }
+        }
     }
 }
 
