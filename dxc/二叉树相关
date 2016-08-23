@@ -1,0 +1,67 @@
+7.2 递归二叉树的序列打印练习题
+请用递归方式实现二叉树的先序、中序和后序的遍历打印。
+给定一个二叉树的根结点root，请依次返回二叉树的先序，中序和后续遍历(二维数组的形式)。
+
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+public class TreeToSequence {
+    public int[][] convert(TreeNode root) {
+        // write code here
+        if (root == null) {
+            return null;
+        }
+        int[][] result = new int[3][];
+        List<Integer> preList = new LinkedList<Integer>();
+        List<Integer> midList = new LinkedList<Integer>();
+        List<Integer> aftList = new LinkedList<Integer>();
+        preSer(root, preList);
+        midSer(root, midList);
+        aftSer(root, aftList); 
+        int n = preList.size();
+        result[0] = new int[n];
+        result[1] = new int[n];
+        result[2] = new int[n];
+        for(int i=0; i<n; i++) {
+            result[0][i] = preList.get(i);
+            result[1][i] = midList.get(i);
+            result[2][i] = aftList.get(i);
+        }
+        return result;
+    }
+    
+    public void preSer(TreeNode root, List<Integer> list) {//先序,确实已参数形式传进去，会好做些   
+        if (root == null) {
+            return ;
+        }
+        list.add(root.val);
+        preSer(root.left, list);
+        preSer(root.right, list);
+    }
+    
+    public void midSer(TreeNode root, List<Integer> list) {//中序,确实已参数形式传进去，会好做些   
+        if (root == null) {
+            return ;
+        }
+        midSer(root.left, list);
+        list.add(root.val);
+        midSer(root.right, list);
+    }
+    
+    public void aftSer(TreeNode root, List<Integer> list) {//后序,确实已参数形式传进去，会好做些   
+        if (root == null) {
+            return ;
+        }
+        aftSer(root.left, list);
+        aftSer(root.right, list);
+        list.add(root.val);
+    }
+}
