@@ -213,6 +213,27 @@ public class TreeNode {
 public class CountNodes {
     public int count(TreeNode root) {
         // write code here
+        if (root == null) {
+            return 0;
+        }
+        int h_left = countHeight(root.left);//左子树高度
+        int h_right = countHeight(root.right);//右子树高度
+        if (h_left > h_right) {//右子树为满二叉树
+            return 1 + countFullTree(h_right) + count(root.left);
+        } else {//左子树肯定为满二叉树
+            return 1 + countFullTree(h_left) + count(root.right);
+        }
+    }
+    
+    public int countFullTree(int h) {//算一颗高h的满二叉树的节点个数
+        return (int)Math.pow(2, h) - 1;
+    }
+    
+    public int countHeight(TreeNode root){//算一颗树的高度
+        if (root == null) {
+            return 0;
+        }
+		return 1 + countHeight(root.left);
     }
 }
 
