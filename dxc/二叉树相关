@@ -65,3 +65,159 @@ public class TreeToSequence {
         list.add(root.val);
     }
 }
+
+7.3 非递归二叉树的序列打印练习题
+请用非递归方式实现二叉树的先序、中序和后序的遍历打印。
+给定一个二叉树的根结点root，请依次返回二叉树的先序，中序和后续遍历(二维数组的形式)。
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+
+//到目前为止，树的这种递归写成递推已经相当擅长了
+class NodeRecord {//记录节点的左右孩子，是否进栈
+  int state;
+  TreeNode node;
+      public NodeRecord(TreeNode node, int state) {
+          this.state = state;
+          this.node = node;
+      }
+}
+
+
+public class TreeToSequence {    
+    
+    public int[][] convert(TreeNode root) {
+        // write code here
+        if (root == null) {
+            return null;
+        }
+        
+        int[][] result = new int[3][];
+        result[0] = preSer(root);
+        result[1] = midSer(root);
+        result[2] = aftSer(root);
+        return result;
+    }
+    
+    public int[] preSer(TreeNode root) {//先序
+        Stack<NodeRecord> stack = new Stack<NodeRecord>();
+        List<Integer> list = new LinkedList<Integer>();
+        NodeRecord p = new NodeRecord(root, 0);
+        list.add(p.node.val);
+        stack.push(p);
+        while (!stack.empty()) {
+            p = stack.peek();
+            if (p.state == 0) {//说明只放了他
+                if (p.node.left != null) {//先放左孩子
+                    p.state = 1;
+                    list.add(p.node.left.val);
+                    stack.push(new NodeRecord(p.node.left, 0));
+                } else if (p.node.right != null) {//左孩子，为空就直接放右孩子
+                    p.state = 2;
+                    list.add(p.node.right.val);
+                    stack.push(new NodeRecord(p.node.right, 0));
+                } else {
+                    stack.pop();
+                }
+            } else if (p.state == 1) {//说明左孩子，已经放过了
+                if (p.node.right != null) {
+                    p.state = 2;
+                    list.add(p.node.right.val);
+                    stack.push(new NodeRecord(p.node.right, 0));
+                } else {//要是右孩子，也没有了，就直接pop(错误1)，编的时候，就把if的所有情况想到，全集
+                    stack.pop();
+                }
+            } else {//状态为2，说明右孩子，也放过了
+                stack.pop();
+            }
+        }
+        int result[] = new int[list.size()];
+        for (int i=0; i<list.size(); i++) {
+            result[i] = list.get(i);
+        }
+        return result;
+    }
+    
+    public int[] midSer(TreeNode root) {//中序,每个状态的，还是交相应的状态去处理，不要提前处理了，否则有可能看晕
+        Stack<NodeRecord> stack = new Stack<NodeRecord>();
+        List<Integer> list = new LinkedList<Integer>();
+        NodeRecord p = new NodeRecord(root, 0);
+        stack.push(p);
+        while (!stack.empty()) {
+            p = stack.peek();
+            if (p.state == 0) {//新加进去的，要依次加左孩子和右孩子
+               if (p.node.left != null) {
+                   p.state = 1;
+                   stack.push(new NodeRecord(p.node.left, 0));
+               } else if (p.node.right != null) {
+                   p.state = 1;
+               } else {
+                   list.add(p.node.val);
+                   stack.pop();
+               }
+            } else if (p.state == 1) {
+                p.state = 2;
+                list.add(p.node.val);
+                if (p.node.right != null) {
+                    stack.push(new NodeRecord(p.node.right, 0));
+                } else {
+                    stack.pop();
+                }
+            } else {
+                stack.pop();
+            }
+        }
+        int[] result = new int[list.size()];
+        for (int i=0; i<list.size(); i++) {
+            result[i] = list.get(i);
+        }
+        return result;
+     }
+    
+    public int[] aftSer(TreeNode root) {//后序   
+        Stack<NodeRecord> stack = new Stack<NodeRecord>();
+        List<Integer> list = new LinkedList<Integer>();
+        NodeRecord p = new NodeRecord(root, 0);
+        stack.push(p);
+        
+        while (!stack.empty()) {
+            p = stack.peek();
+            if (p.state == 0) {
+                if (p.node.left != null) {
+                    p.state = 1;
+                    stack.push(new NodeRecord(p.node.left, 0));
+                } else if (p.node.right != null){
+                    p.state = 2;
+                    stack.push(new NodeRecord(p.node.right, 0));
+                } else {
+                    p.state = 2;
+                }
+            } else if (p.state == 1) {
+                if (p.node.right != null) {
+                    p.state = 2;
+                    stack.push(new NodeRecord(p.node.right, 0));
+                } else {
+                    p.state = 2;
+                }
+            } else {
+                list.add(p.node.val);
+                stack.pop();
+            }
+        }
+        
+        int[] result = new int[list.size()];
+        for (int i=0; i<result.length; i++) {
+            result[i] = list.get(i);
+        }
+        return result;
+    }
+    
+}
