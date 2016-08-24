@@ -307,3 +307,55 @@ public class CheckBalance {
         }
     }
 }
+
+7.9 完全二叉树判断练习题
+有一棵二叉树,请设计一个算法判断它是否是完全二叉树。
+给定二叉树的根结点root，请返回一个bool值代表它是否为完全二叉树。树的结点个数小于等于500。
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+public class CheckCompletion {
+    public boolean chk(TreeNode root) {
+        // write code here
+        if (root == null) {
+            return true;
+        }
+        boolean flag = false;//判断是不是快到叶子节点了
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.addLast(root);
+        while (queue.size() != 0) {
+            TreeNode t = queue.pollFirst();
+            if (flag == true) {//要是后面都应该是叶子节点了
+                if (t.left != null || t.right != null) {
+                    return false;
+                } else {
+                    continue;
+                }
+            } else {
+                if (t.right != null && t.left == null) {//要是有右孩子，没有左孩子，肯定就不是完全二叉树
+                    return false;
+                }
+                if (t.right == null && t.left == null) {
+                    flag = true;
+                    continue;
+                } else {
+                    queue.addLast(t.left);
+                    if (t.right == null) {
+                        continue;
+                    } else {
+                        queue.addLast(t.right);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
