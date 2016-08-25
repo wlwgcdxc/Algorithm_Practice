@@ -51,3 +51,35 @@ public class Exchange {
         return sum;
     }
 }
+
+
+ 12.4 台阶问题练习题
+ 有n级台阶，一个人每次上一级或者两级，问有多少种走完n级台阶的方法。为了防止溢出，请将结果Mod 1000000007
+给定一个正整数int n，请返回一个数，代表上楼的方式数。保证n小于等于100000。
+测试样例：
+1
+返回：1
+
+import java.util.*;
+
+public class GoUpstairs {
+    public int countWays(int n) {//10万次的递归深度肯定是栈溢出了
+        // write code here
+        if (n < 0) {
+            return -1;
+        }
+        if (n == 0) {
+            return 1;
+        }
+        if (n == 1) {
+            return 1;
+        }
+        int[] f = new int[n+1];
+        f[0] = 1;
+        f[1] = 1;
+        for (int i=2; i< f.length; i++) {
+            f[i] = (f[i-1] + f[i-2]) % 1000000007;
+        }
+        return f[n];
+    }
+}
