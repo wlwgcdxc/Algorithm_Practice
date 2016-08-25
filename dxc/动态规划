@@ -1,0 +1,53 @@
+12.2 找零钱练习题
+有数组penny，penny中所有的值都为正数且不重复。每个值代表一种面值的货币，每种面值的货币可以使用任意张，再给定一个整数aim(小于等于1000)代表要找的钱数，求换钱有多少种方法。
+给定数组penny及它的大小(小于等于50)，同时给定一个整数aim，请返回有多少种方法可以凑成aim。
+测试样例：
+[1,2,4],3,3
+返回：2
+
+import java.util.*;
+
+public class Exchange {
+    public int countWays(int[] penny, int n, int aim) {
+        // write code here
+        if (penny.length != n || n < 0) {
+            return -1;
+        }
+        int[][] dp = new int[n][];
+        for (int i=0; i<dp.length; i++) {
+            dp[i] = new int[aim+1];//错误1
+            for (int j=0; j<dp[i].length; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        int result = countWays(dp, penny, n-1, aim);
+        return result;
+    }
+    
+    public int countWays(int[][] dp, int[] penny, int i, int j) {
+        if (dp[i][j] != -1) {//备忘录
+            return dp[i][j];
+        }
+        if (i == 0) {//表示用第0张，凑j
+           if (j % penny[i] == 0) {
+               return 1;
+           } else {
+               return 0;
+           }
+        }
+        if (j < 0) {//要好好分析下，这两个参数是怎么来的，i<-i-1，很好分析，j<-j-penny,大于的话，继续，等于的话正好第i张可以凑一下，小于的话，肯定就不对了，返回0
+            return 0;
+        }
+        if (j == 0) {//
+            return 1;
+        }
+        int sum = 0;
+        int k = j;
+        while (k >= 0) {
+            sum = sum + countWays(dp, penny, i - 1, k);
+            k = k - penny[i];
+        }
+        dp[i][j] = sum;
+        return sum;
+    }
+}
