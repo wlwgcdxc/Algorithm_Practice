@@ -111,3 +111,48 @@ public class MinimumPath {
         return dp[n-1][m-1];
     }
 }
+
+12.6 LIS练习题
+这是一个经典的LIS(即最长上升子序列)问题，请设计一个尽量优的解法求出序列的最长上升子序列的长度。
+给定一个序列A及它的长度n(长度小于等于500)，请返回LIS的长度。
+测试样例：
+[1,4,2,5,3],5
+返回：3
+
+import java.util.*;
+
+public class LongestIncreasingSubsequence {
+    public int getLIS(int[] A, int n) {
+        // write code here
+        if (A.length != n || n <= 0) {
+            return -1;
+        }
+        //int[] dp = A;注意不能这样赋值，这样做，起始dp，就是A，会改变A的值
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i=1; i<n; i++) {
+            int max = Integer.MIN_VALUE;
+            int k = i - 1;
+            while (k >= 0) {
+                if (A[k] < A[i]) {
+                   if (max < dp[k] + 1) {
+                      max = dp[k] + 1;
+                   } 
+                }
+                k--;
+            }
+            if (max == Integer.MIN_VALUE) {
+                max = 1;
+            }
+            dp[i] = max;
+        }
+        
+        int max = Integer.MIN_VALUE;
+        for(int i=0; i<n; i++) {
+            if (max < dp[i]) {
+                max = dp[i];
+            }
+        }
+        return max;
+    }
+}
