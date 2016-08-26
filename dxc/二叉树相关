@@ -555,3 +555,40 @@ public class FindErrorNode {
         return result;
     }
 }
+
+7.13 树上最远距离练习题
+从二叉树的节点A出发，可以向上或者向下走，但沿途的节点只能经过一次，当到达节点B时，路径上的节点数叫作A到B的距离。对于给定的一棵二叉树，求整棵树上节点间的最大距离。
+给定一个二叉树的头结点root，请返回最大距离。保证点数大于等于2小于等于500.
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+public class LongestDistance {
+    public int findLongest(TreeNode root) {
+        // write code here
+        if (root == null) {
+            return -1;
+        }
+        int[] result = getLongest(root);
+        return result[1];
+    }
+    
+    public int[] getLongest(TreeNode root) {
+        int[] result = new int[2];//第一个元素返回高度，第二个元素返回最大距离
+        if (root == null) {//初始化的，应该就是0
+            return result;
+        }
+        int[] left = getLongest(root.left);
+        int[] right = getLongest(root.right);
+        result[0] = Math.max(left[0], right[0]) + 1;
+        result[1] = Math.max(Math.max(left[1], right[1]), left[0]+right[0]+1);
+        return result;
+    }
+}
