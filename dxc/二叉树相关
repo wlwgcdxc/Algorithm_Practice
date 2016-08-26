@@ -359,3 +359,58 @@ public class CheckCompletion {
         return true;
     }
 }
+
+7.5 二叉树的打印练习题
+有一棵二叉树，请设计一个算法，按照层次打印这棵二叉树。
+给定二叉树的根结点root，请返回打印结果，结果按照每一层一个数组进行储存，所有数组的顺序按照层数从上往下，且每一层的数组内元素按照从左往右排列。保证结点数小于等于500。
+
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+public class TreePrinter {
+    public int[][] printTree(TreeNode root) {
+        // write code here
+        if (root == null) {
+            return null;
+        }
+        List<List<Integer>> listAll = new LinkedList<List<Integer>>();
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();//要用队列的这些方法，只在LinkedList里，List里没有
+        TreeNode last = root;//当前行的最右元素，更新last的时候，实际当前行才开始打印
+        TreeNode nlast = null;//记录下下一行最右元素
+        queue.addLast(root);
+        List<Integer> list = new LinkedList<Integer>();
+        while (queue.size() != 0) {
+            TreeNode tmp = queue.pollFirst();
+            list.add(tmp.val);
+            if (tmp.left != null) {
+                nlast = tmp.left;
+                queue.addLast(tmp.left);
+            }
+            if (tmp.right != null) {
+                nlast = tmp.right;//记录新加进去的最右元素
+                queue.addLast(tmp.right);
+            }
+            if (tmp == last) {//表示当前行已经扫描到最后一个元素了，将整个list加到listAll里，并last指向下一行最后一个元素，从刚开始的元素向里加
+                listAll.add(list);
+                list = new LinkedList<Integer>();
+                last = nlast;
+            }
+        }
+        int[][] result = new int[listAll.size()][];
+        for (int i=0; i<result.length; i++) {
+            result[i] = new int[listAll.get(i).size()];
+            for (int j=0; j<result[i].length; j++) {
+                result[i][j] = listAll.get(i).get(j);
+            }
+        }
+        return result;
+    }
+}
