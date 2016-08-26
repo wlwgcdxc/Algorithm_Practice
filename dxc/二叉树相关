@@ -481,3 +481,77 @@ public class FoldPaper {
         return list;
     }
 }
+
+7.12 寻找错误结点练习题
+一棵二叉树原本是搜索二叉树，但是其中有两个节点调换了位置，使得这棵二叉树不再是搜索二叉树，请找到这两个错误节点并返回他们的值。保证二叉树中结点的值各不相同。
+给定一棵树的根结点，请返回两个调换了位置的值，其中小的值在前。
+
+import java.util.*;
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}*/
+public class FindErrorNode {
+    public int[] findError(TreeNode root) {
+        // write code here
+        if (root == null) {
+            return null;
+        }
+        
+        List<Integer> list = midSer(root);
+        int[] arr = new int[list.size()];
+        for (int i=0; i<arr.length; i++) {
+            arr[i] = list.get(i);
+        }
+        
+        return getPro(arr);
+    }
+    
+    public List<Integer> midSer(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        List<Integer> listLeft= midSer(root.left);
+        List<Integer> listRight = midSer(root.right);
+        List<Integer> list= new LinkedList<Integer>();//容器的初始化，老是写错，注意
+        if (listLeft != null) {
+            list.addAll(listLeft);
+        }
+        list.add(root.val);
+        if (listRight != null) {
+            list.addAll(listRight);
+        }
+        return list;
+    }
+    
+    public int[] getPro(int[] arr) {
+        int index1 = -1;//返回第一个位置不对的地方
+        int index2 = -1;//返回第二个
+        int[] result = new int[2];
+        
+        for (int i=0; i<arr.length-1; i++) {
+            if (arr[i] > arr[i+1]) {
+                if (index1 == -1) {
+                    index1 = i;
+                } else {
+                    index2 = i;
+                }
+            }
+        }
+        
+        if (index2 != -1) {
+            result[0] = arr[index2+1];
+            result[1] = arr[index1];
+        } else {
+            result[0] = arr[index1+1];
+            result[1] = arr[index1];
+        }
+        return result;
+    }
+}
