@@ -414,3 +414,70 @@ public class TreePrinter {
         return result;
     }
 }
+
+7.11 折纸练习题
+请把纸条竖着放在桌⼦上，然后从纸条的下边向上⽅对折，压出折痕后再展 开。此时有1条折痕，突起的⽅向指向纸条的背⾯，这条折痕叫做“下”折痕 ；突起的⽅向指向纸条正⾯的折痕叫做“上”折痕。如果每次都从下边向上⽅ 对折，对折N次。请从上到下计算出所有折痕的⽅向。
+给定折的次数n,请返回从上到下的折痕的数组，若为下折痕则对应元素为"down",若为上折痕则为"up".
+测试样例：
+1
+返回：["down"]
+
+import java.util.*;
+
+public class FoldPaper {
+    class TreeNode {
+        String val = null;
+        TreeNode left = null;
+        TreeNode right = null;
+        
+        public TreeNode(String val) {
+            this.val = val;
+        }
+    }
+    
+    public String[] foldPaper(int n) {
+        // write code here
+        if (n <= 0) {
+            return null;
+        }
+        
+        TreeNode root = new TreeNode("down");
+        creatTree(n, root);
+        List<String> list = midSer(root);
+        String[] result = new String[list.size()];
+        for (int i=0; i<list.size(); i++) {
+            result[i] = list.get(i);
+        }
+        return result;
+    }
+    
+    public void creatTree(int n, TreeNode node) {
+        if (n <= 1) {
+            return ;
+        }
+        TreeNode left = new TreeNode("down");
+        TreeNode right = new TreeNode("up");
+        node.left = left;
+        node.right = right;
+        
+        creatTree(n-1, left);
+        creatTree(n-1, right);
+    }
+    
+    public List<String> midSer(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        List<String> listLeft = midSer(root.left);
+        List<String> listRight = midSer(root.right);
+        List<String> list = new LinkedList<String>();
+        if (listLeft != null) {//错误1，本来就感觉只返回null，有点奇怪
+            list.addAll(listLeft);
+        }
+        list.add(root.val);
+        if (listRight != null) {
+            list.addAll(listRight);
+        }
+        return list;
+    }
+}
