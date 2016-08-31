@@ -398,3 +398,40 @@ public class Solution {
         return false;
     }
 }
+
+数值的整数次方
+题目描述
+
+给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。
+public class Solution {
+    public double Power(double base, int exponent) {
+        if (exponent == 0) {
+            return (double)1;
+        }
+        
+        boolean flag = true;
+        if (exponent < 0) {
+            flag = false;
+            exponent = 0 - exponent;
+        }
+        if (exponent == 1) {
+            return base;
+        }
+        
+        if (exponent % 2 == 0) {
+            double tmp = Power(base, exponent/2);
+            if (flag == true) {
+                return tmp * tmp;
+            } else {
+                return 1 / (tmp * tmp);
+            }        
+        } else {
+            double tmp = Power(base, exponent/2);
+            if (flag == true) {
+                return tmp * tmp * base;
+            } else {
+                return 1 / (tmp * tmp * base);
+            }
+        }
+    }
+}
