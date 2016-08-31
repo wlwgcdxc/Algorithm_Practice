@@ -27,3 +27,37 @@ public class Solution {
         return result;
     }
 }
+
+2.链表中倒数第k个结点
+/*
+public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}*/
+public class Solution {
+    public ListNode FindKthToTail(ListNode head,int k) {//注意两个输入参数都要判断的，先写这个
+		ListNode p = head;
+        if (head == null) {
+            return head;
+        }
+        if (k == 0) {
+            return null;
+        }
+        for (int i=0; i<k-1; i++) {
+            p = p.next;
+            if (p == null) {
+                return null;
+            }
+        }
+        ListNode result = head;
+        while (p.next != null) {
+            p = p.next;
+            result = result.next;
+        }
+        return result;
+    }
+}
