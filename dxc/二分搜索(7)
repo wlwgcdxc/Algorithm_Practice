@@ -362,3 +362,39 @@ public class QuickPower {
         
     }
 }
+
+题目描述
+
+在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+public class Solution {
+    public boolean Find(int [][] array,int target) {
+    	int n = array.length;
+        int m = array[0].length;
+        return Find(array, target, 0, n-1, 0, m-1);
+    }
+    
+    public boolean Find(int[][] array, int target, int x_b, int x_e, int y_b, int y_e) {//end包含该元素
+        if (x_e < x_b || y_e < y_b) {
+            return false;
+        }
+        if (x_e == x_b && y_e == y_b) {
+            if (array[x_b][y_b] == target) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        int mid_x = (x_e - x_b) / 2 + x_b;
+        int mid_y = (y_e - y_b) / 2 + y_b;
+        
+        if (array[mid_x][mid_y] == target) {
+            return true;
+        } else if (array[mid_x][mid_y] > target) {
+            return Find(array, target, x_b, mid_x-1, y_b, y_e) || Find(array, target, mid_x, x_e, y_b, mid_y-1);
+        } else if (array[mid_x][mid_y] < target) {
+            return Find(array, target, mid_x+1, x_e, y_b, y_e) || Find(array, target, x_b, mid_x, mid_y+1, y_e);
+        }
+        return false;
+    }
+}
