@@ -592,3 +592,38 @@ public class LongestDistance {
         return result;
     }
 }
+
+题目描述(10)
+
+输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+        return reTree(pre, 0, pre.length-1, in, 0, in.length-1);
+    }
+    
+    public TreeNode reTree(int[] pre, int p_b, int p_e, int[] in, int i_b, int i_e) {
+        if (p_b > p_e || i_b > i_e) {
+            return null;
+        }
+        TreeNode root = new TreeNode(pre[p_b]);
+        int index = -1;//找根节点在中序数组里的下标
+        for (int i=i_b; i<=i_e; i++) {
+            if (in[i] == pre[p_b]) {
+                index = i;
+                break;
+            }
+        }
+        root.left = reTree(pre, p_b+1, p_b+index-i_b, in, i_b, index-1);
+        root.right = reTree(pre, p_b+index-i_b+1, p_e, in, index+1, i_e);
+        return root;        
+    }
+}
