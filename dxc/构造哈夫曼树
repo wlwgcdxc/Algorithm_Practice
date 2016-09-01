@@ -1,0 +1,99 @@
+
+import java.util.*;
+
+class TreeNode {
+	int val;
+	TreeNode left;
+	TreeNode right;
+	
+	public TreeNode(int val) {
+		this.val = val;
+	}
+}
+
+public class HufferMan {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        LinkedList<TreeNode> list = new LinkedList<TreeNode>();
+        TreeNode A = new TreeNode(2);
+        TreeNode B = new TreeNode(6);
+        TreeNode C = new TreeNode(4);
+        TreeNode D = new TreeNode(8);
+        TreeNode E = new TreeNode(10);
+        list.add(A);
+        list.add(B);
+        list.add(C);
+        list.add(D);
+        list.add(E);
+        
+        sort(list);//先把各个节点按照val从小到大排序
+        huffman(list);//构造哈夫曼树
+        TreeNode root = list.poll();//测试，看看先序和中序遍历的结果对不对
+        System.out.println(preStr(root));
+        System.out.println(midStr(root));
+	}
+	
+	public static void sort(LinkedList<TreeNode> list) {//按头结点val的大小排序
+		for(int i=1; i<list.size(); i++) {
+			if (list.get(i).val < list.get(i-1).val) {
+				int j;
+				TreeNode tmp = list.get(i);
+				for (j=i-1; j>=0; j--) {
+					if (list.get(j).val > list.get(i).val) {
+						list.set(j+1, list.get(j));
+					} else {
+						break;
+					}
+				}
+				list.set(j+1, tmp);
+			}
+		}
+	}
+	
+	public static void insertNode(LinkedList<TreeNode> list, TreeNode node) {//把这个node，按照val插入有序的list内
+		int i;
+		for (i=0; i<list.size(); i++) {
+			if (list.get(i).val < node.val) {
+				continue;
+			} else {
+				list.add(i, node);
+				return;
+			}
+		}
+		list.add(i, node);
+	}
+	
+	public static void huffman(LinkedList<TreeNode> list) {//返回哈弗曼树，注意要始终维护list，使之有序
+		if (list.size() <= 1) {
+			return ;
+		}
+		TreeNode tmp1 = list.poll();
+		TreeNode tmp2 = list.poll();
+		TreeNode root = new TreeNode(tmp1.val + tmp2.val);
+		root.left = tmp1;
+		root.right = tmp2;
+		insertNode(list, root);
+		huffman(list);
+	}
+	
+	public static void prt(List<TreeNode> list) {//测试
+		for (int i=0; i<list.size(); i++) {
+			System.out.println(list.get(i).val);
+		}
+	}
+	
+	public static String preStr(TreeNode root) {//测试
+		if (root == null) {
+			return "";
+		}
+		return root.val + " " + preStr(root.left) + preStr(root.right);
+	}
+    
+	public static String midStr(TreeNode root) {//测试
+		if (root == null) {
+			return "";
+		}
+		return preStr(root.left) + root.val + " " + preStr(root.right);
+	}
+}
