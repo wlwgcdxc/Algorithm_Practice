@@ -1,0 +1,66 @@
+1.调整数组顺序使奇数位于偶数前面
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+public class Solution {
+    public void reOrderArray(int [] array) {
+        int i = -1;//i指向奇数的位置
+        for (int j=0; j<array.length; j++) {
+            if (array[j] % 2 == 1) {
+                int tmp = array[j];
+                int n = j-1;
+                while (n >= i + 1) {
+                    array[n + 1] = array[n];
+                    n--;
+                }
+                array[n + 1] = tmp;
+                i++;
+            }
+        }
+    }
+}
+
+2.顺时针打印矩阵
+题目描述
+
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> printMatrix(int [][] matrix) {
+       ArrayList<Integer> list = new ArrayList<Integer>();
+       int n = matrix.length;
+       if (n == 0) {
+           return list;
+       }
+       int m = matrix[0].length;
+       if (m == 0) {
+           return list;
+       }
+       printMatrix(matrix, list, 0, n-1, 0, m-1);
+       return list;
+    }
+    
+    public void printMatrix(int[][] matrix, ArrayList<Integer> list, int x_b, int x_e, int y_b, int y_e) {
+        if (x_e < x_b || y_e < y_b) {
+            return ;
+        }
+        
+        for (int i=y_b; i<=y_e; i++) {
+            list.add(matrix[x_b][i]);
+        }
+        if (x_e - x_b >= 2) {
+            for (int i=x_b+1; i<=x_e-1; i++) {
+                list.add(matrix[i][y_e]);
+            }
+        }
+        if (x_e - x_b >= 1) {
+            for (int i=y_e; i>=y_b; i--) {
+            list.add(matrix[x_e][i]);
+        	}
+        }
+        if (x_e - x_b >= 2 && y_e - y_b >= 1) {
+            for (int i=x_e-1; i>=x_b+1; i--) {//注意for循环一定不要写错，还有计算每种新情况时，一定要让他满足条件
+                list.add(matrix[i][y_b]);
+            }
+        }
+        printMatrix(matrix, list, x_b+1, x_e-1, y_b+1, y_e-1);
+    }
+}
